@@ -26,14 +26,20 @@ public class HeapPriorityQueue<K extends Comparable<K>, V extends Comparable<V> 
 	protected ArrayList<Entry<K, V>> heap = new ArrayList<>();
 
 	public ArrayList<K> keys() {
-		// TODO
-		return null;
+		ArrayList<K> kList = new ArrayList<>();
+		for (Entry<K, V> entry : heap) {
+			kList.add(entry.getKey());
+		}
+		return kList;
 
 	}
 
 	public ArrayList<V> values() {
-		// TODO
-		return null;
+		ArrayList<V> vList = new ArrayList<>();
+		for (Entry<K, V> entry : heap) {
+			vList.add(entry.getValue());
+		}
+		return vList;
 	}
 	/**
 	 * Creates an empty priority queue based on the natural ordering of its keys.
@@ -61,40 +67,39 @@ public class HeapPriorityQueue<K extends Comparable<K>, V extends Comparable<V> 
 	 * @param values an array of the initial values for the priority queue
 	 */
 	public HeapPriorityQueue(K[] keys, V[] values) {
-		// TODO
+		super();
+		for (int j = 0; j < Math.min(keys.length, values.length); j++) {
+			heap.add(new PQEntry<>(keys[j], values[j]));
+		}
+		heapify();
 	}
 
 	// protected utilities
 	protected int parent(int j) {
-		// TODO
-		return 0;
+		return (j - 1) / 2;
 	}
 
 	protected int left(int j) {
-		// TODO
-		return 0;
-
+		return (2 * j) + 1;
 	}
 
 	protected int right(int j) {
-		// TODO
-		return 0;
+		return (2 * j) + 2;
 	}
 
 	protected boolean hasLeft(int j) {
-		// TODO
-		return false;
+		return left(j) < heap.size();
 	}
 
 	protected boolean hasRight(int j) {
-		// TODO
-		return false;
-
+		return right(j) < heap.size();
 	}
 
 	/** Exchanges the entries at indices i and j of the array list. */
 	protected void swap(int i, int j) {
-		// TODO
+		Entry<K,V> temp = heap.get(i);
+		heap.set(i, heap.get(j));
+		heap.set(j, temp);
 	}
 
 	/**
@@ -102,13 +107,19 @@ public class HeapPriorityQueue<K extends Comparable<K>, V extends Comparable<V> 
 	 * property.
 	 */
 	protected void upheap(int j) {
-		// TODO
 		// keep doing until satisfied
 		// get the parent of j
 		// compare keys of current position j with parent(j)
 		// if heap order satisfied -> done
 		// else bubble up
-
+		while (j > 0) {
+			int p = parent(j);
+			if (compare(heap.get(j), heap.get(p)) >= 0) {
+				break;
+			}
+			swap(j, p);
+			j = p;
+		}
 	}
 
 	/*
@@ -123,22 +134,39 @@ public class HeapPriorityQueue<K extends Comparable<K>, V extends Comparable<V> 
 		// while not at the bottom tree (leaf)
 		// if key_parent >= key_child stop
 		// find smallest child and swap
+
 	}
 
 	/**
 	 * Moves the entry at index j lower, if necessary, to restore the heap property.
 	 */
 	protected void downheap(int j) {
-		// TODO
 		// while not at the bottom tree (leaf)
 		// if key_parent >= key_child stop
 		// find smallest child and swap
-
+		while (hasLeft(j)) {
+			int leftIndex = left(j);
+			int smallChildIndex = leftIndex;
+			if (hasRight(j)) {
+				int rightIndex = right(j);
+				if (compare(heap.get(leftIndex), heap.get(rightIndex)) > 0) {
+					smallChildIndex = rightIndex;
+				}
+			}
+			if (compare(heap.get(smallChildIndex), heap.get(j)) >= 0) {
+					break;
+			}
+			swap(j, smallChildIndex);
+			j = smallChildIndex;
+		}
 	}
 
 	/** Performs a bottom-up construction of the heap in linear time. */
 	protected void heapify() {
-		// TODO
+		int startIndex = parent(size() - 1);
+		for (int j = startIndex; j >= 0; j--) {
+			downheap(j);
+		}
 	}
 
 	// public methods
@@ -173,8 +201,10 @@ public class HeapPriorityQueue<K extends Comparable<K>, V extends Comparable<V> 
 	 */
 	@Override
 	public Entry<K, V> insert(K key, V value) throws IllegalArgumentException {
-		// TODO
-		return null;
+		Entry<K,V> newest = new PQEntry<>(key, value);
+		heap.add(newest);
+		upheap(heap.size() - 1);
+		return newest;
 	}
 
 	/**
@@ -184,15 +214,19 @@ public class HeapPriorityQueue<K extends Comparable<K>, V extends Comparable<V> 
 	 */
 	@Override
 	public Entry<K, V> removeMin() {
-		// TODO
-		return null;
+		if (heap.isEmpty()) {
+			return null;
+		}
+		Entry<K,V> answer = heap.get(0);
+		swap (0, heap.size() - 1);
+		heap.removeLast();
+		downheap(0);
+		return answer;
 	}
 
 	public String toString() {
 		return heap.toString();
 	}
-
-
 
 	public static void main(String[] args) {
 	}

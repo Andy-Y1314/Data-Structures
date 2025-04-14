@@ -1,6 +1,6 @@
 package tree;
 
-import org.junit.Ignore;
+//import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -137,7 +137,7 @@ class RBTreeMapTest {
         assertEquals(12, map.higherEntry(11).getKey());
     }
 
-    @Ignore
+    //@Ignore
     @Test
     void testEntrySet() {
         System.out.println("testEntrySet:: Not yet implemented");

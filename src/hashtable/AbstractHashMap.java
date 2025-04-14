@@ -23,15 +23,20 @@ import java.util.Random;
 public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
     protected int n = 0;                 // number of entries in the dictionary
     protected int capacity;              // length of the table
-    private final int prime = 0;                   // prime factor
-    private final long scale = 0;
-    private final long shift = 0;           // the shift and scaling factors
+    private final int prime;                   // prime factor
+    private final long scale;
+    private final long shift;           // the shift and scaling factors
 
     /**
      * Creates a hash table with the given capacity and prime factor.
      */
     public AbstractHashMap(int cap, int p) {
-        // TODO
+        prime = p;
+        capacity = cap;
+        Random rand = new Random();
+        scale = rand.nextInt(prime - 1) + 1;
+        shift = rand.nextInt(prime);
+        createTable();
     }
 
     /**
@@ -81,7 +86,7 @@ public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
     @Override
     public V remove(K key) {
         // TODO
-        return null;
+        return bucketRemove(hashValue(key), key);
     }
 
     /**
@@ -97,7 +102,11 @@ public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
     @Override
     public V put(K key, V value) {
         // TODO
-        return null;
+        V answer = bucketPut(hashValue(key), key, value);
+        if (n > capacity / 2) {
+            resize(2 * capacity - 1);
+        }
+        return answer;
     }
 
     // private utilities
@@ -111,7 +120,7 @@ public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
 
     private int hashValue(K key) {
         // TODO
-        return 0;
+        return (int) ((Math.abs(key.hashCode( ) * scale + shift) % prime) % capacity);
     }
 
     /**
@@ -119,7 +128,17 @@ public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
      */
     private void resize(int newCap) {
         // TODO
-    }
+        ArrayList<Entry<K,V>> buffer = new ArrayList<>(n);
+        for (Entry<K,V> e : entrySet()) {
+            buffer.add(e);
+        }
+        capacity = newCap;
+        createTable();
+        n = 0;
+        for (Entry<K,V> e : buffer) {
+            put (e.getKey(), e.getValue());
+        }
+     }
 
     // protected abstract methods to be implemented by subclasses
 

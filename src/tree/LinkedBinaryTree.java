@@ -2,11 +2,15 @@ package tree;
 
 import interfaces.BinaryTree;
 import interfaces.Position;
+import interfaces.Queue;
+import list.SinglyLinkedList;
+import stacksqueues.LinkedQueue;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -27,23 +31,62 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
     } // constructs an empty binary tree
 
     public static <E extends Comparable<E>> LinkedBinaryTree<E> makeRandom(int n, E[] arr) {
-        // TODO
-        return null;
+        LinkedBinaryTree<E> bt = new LinkedBinaryTree<>();
+        bt.setRoot(randomTree(null, 0, n - 1, arr));
+        bt.size = n;
+        return bt;
     }
 
     public static LinkedBinaryTree<Integer> makeRandom(int n) {
-        // TODO
-        return null;
+        Integer[] arr = new Integer[n];
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = i + 1;
+        }
+
+        LinkedBinaryTree<Integer> bt = new LinkedBinaryTree<>();
+        bt.setRoot(randomTree(null, 0, n - 1, arr));
+        bt.size = n;
+        return bt;
     }
 
     public static <E> Node<E> randomTree(Node<E> parent, int first, int last, E[] arr) {
-        // TODO
-        return null;
+        if (first > last) {
+            return null;
+        }
+
+        Random rand = new Random();
+        int randIndex = rand.nextInt(first, last + 1);
+
+        Node<E> root = new Node<E>(arr[randIndex], parent, null, null);
+
+        root.setLeft(randomTree(root, first, randIndex - 1, arr));
+        root.setRight(randomTree(root, randIndex + 1, last, arr));
+
+        return root;
     }
 
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
+        /*LinkedBinaryTree <String> bt = new LinkedBinaryTree <>();
+        String[] arr = { "A", "B", "C", "D", "E", null, "F", null, null, "G", "H", null, null, null, null };
+        bt.createLevelOrder(arr);
+        System.out.println(bt.toBinaryTreeString());*/
 
+        Integer [] inorder= {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+                18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
+        Integer [] preorder= {18, 2, 1, 14, 13, 12, 4, 3, 9, 6, 5, 8, 7, 10, 11, 15, 16,
+                17, 28, 23, 19, 22, 20, 21, 24, 27, 26, 25, 29, 30};
+
+        LinkedBinaryTree <Integer > bt = new LinkedBinaryTree <>();
+        bt.construct(inorder , preorder);
+        System.out.println(bt.toBinaryTreeString());
+
+        /*LinkedBinaryTree<String> bt = new LinkedBinaryTree<>();
+        String[] arr = { "A", "B", "C", "D", "E", null, "F", null, null, "G", "H", null, null, null, null };
+        bt.createLevelOrder(arr);
+        System.out.println(bt.toBinaryTreeString());
+        bt.printLeafNodes(bt.root);*/
     }
 
     public boolean isEmpty() {
@@ -58,8 +101,15 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @throws IllegalArgumentException if p is not a valid Position for this tree
      */
     public Position<E> sibling(Position<E> p) {
-        // TODO
-        return null;
+        Position<E> parent = parent(p);
+
+        if (parent == null) return null;
+
+        if (p == left(parent)) {
+            return right(p);
+        } else {
+            return left(p);
+        }
     }
 
     @Override
@@ -87,7 +137,15 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @param snapshot a list to which results are appended
      */
     private void inorderSubtree(Position<E> p, List<Position<E>> snapshot) {
-        // TODO
+        if (left(p) != null) {
+            inorderSubtree(left(p), snapshot);
+        }
+        if (p.getElement() != null) {
+            snapshot.add(p);
+        }
+        if (right(p) != null) {
+            inorderSubtree(right(p), snapshot);
+        }
     }
 
     /**
@@ -98,7 +156,13 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @param snapshot a list to which results are appended
      */
     private void preorderSubtree(Position<E> p, List<Position<E>> snapshot) {
-        // TODO
+        if (p.getElement() != null) {
+            snapshot.add(p);
+        }
+
+        for (Position<E> c : children(p)) {
+            preorderSubtree(c, snapshot);
+        }
     }
 
     /**
@@ -107,8 +171,11 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @return iterable collection of the tree's positions in preorder
      */
     public Iterable<Position<E>> preorder() {
-        // TODO
-        return null;
+        List<Position<E>> snapshot = new ArrayList<>();
+        if (!isEmpty()) {
+            preorderSubtree(root(), snapshot);
+        }
+        return snapshot;
     }
 
     /**
@@ -117,8 +184,12 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @return iterable collection of the tree's positions reported in inorder
      */
     public Iterable<Position<E>> inorder() {
-        // TODO
-        return null;
+        List<Position<E>> snapshot = new ArrayList<>();
+
+        if (!isEmpty()) {
+            inorderSubtree(root(), snapshot);
+        }
+        return snapshot;
     }
 
     /**
@@ -129,7 +200,13 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @param snapshot a list to which results are appended
      */
     private void postorderSubtree(Position<E> p, List<Position<E>> snapshot) {
-        // TODO
+        for (Position<E> c : children(p)) {
+            postorderSubtree(c, snapshot);
+        }
+
+        if (p.getElement() != null) {
+            snapshot.add(p);
+        }
     }
 
     /**
@@ -138,13 +215,15 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @return iterable collection of the tree's positions in postorder
      */
     public Iterable<Position<E>> postorder() {
-        // TODO
-        return null;
+        List<Position<E>> snapshot = new ArrayList<>();
+        if (!isEmpty()) {
+            postorderSubtree(root(), snapshot);
+        }
+        return snapshot;
     }
 
     public Iterable<Position<E>> positions() {
-        // TODO
-        return null;
+        return inorder();
     }
 
     /**
@@ -154,8 +233,10 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @throws IllegalArgumentException if p is not a valid Position for this tree.
      */
     public int depth(Position<E> p) throws IllegalArgumentException {
-        // TODO
-        return 0;
+        if (isRoot(p)) {
+            return 0;
+        }
+        return 1 + depth(parent(p));
     }
 
     /**
@@ -164,8 +245,13 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * Note: This implementation works, but runs in O(n^2) worst-case time.
      */
     private int heightBad() {
-        // TODO
-        return 0;
+        int h = 0;
+        for (Position<E> p : positions()) {
+            if (isExternal(p)) {
+                h = Math.max(h, depth(p));
+            }
+        }
+        return h;
     }
 
     /**
@@ -175,8 +261,12 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @throws IllegalArgumentException if p is not a valid Position for this tree.
      */
     public int height(Position<E> p) throws IllegalArgumentException {
-        // TODO
-        return 0;
+        int h = 0;
+
+        for (Position<E> c : children(p)) {
+            h = Math.max(h, 1 + height(c));
+        }
+        return h;
     }
 
     /**
@@ -198,8 +288,7 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @throws IllegalArgumentException if p is not a valid Position for this tree.
      */
     public boolean isExternal(Position<E> p) {
-        // TODO
-        return false;
+        return numChildren(p) == 0;
     }
 
     /**
@@ -210,8 +299,17 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @throws IllegalArgumentException if p is not a valid Position for this tree.
      */
     public Iterable<Position<E>> children(Position<E> p) {
-        // TODO
-        return null;
+        List<Position<E>> snapshot = new ArrayList<>(2);
+        if (p != null) {
+            if (left(p) != null) {
+                snapshot.add(left(p));
+            }
+
+            if (right(p) != null) {
+                snapshot.add(right(p));
+            }
+        }
+        return snapshot;
     }
 
     /**
@@ -222,32 +320,64 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @throws IllegalArgumentException if p is not a valid Position for this tree.
      */
     public int numChildren(Position<E> p) {
-        // TODO
-        return 0;
+        int count = 0;
+
+        for (Position<E> c : children(p)) {
+            count++;
+        }
+        return count;
     }
 
     // Function to find minimum value node in a given BST
     private Node<E> findMinimum(Node<E> n) {
-        // TODO
-        return null;
+        while (n.getLeft() != null) {
+            n = n.getLeft();
+        }
+        return n;
     }
 
     // Function to find minimum value node in a given BST
     private Node<E> findMaximum(Node<E> n) {
-        // TODO
-        return null;
+        while (n.getRight() != null) {
+            n = n.getRight();
+        }
+        return n;
     }
 
     // Recursive function to find an inorder successor
     private Node<E> inorderSuccessor(Node<E> node, Node<E> succ, E key) {
-        // TODO
-        return null;
-
+        if (node == null) {
+            return null;
+        }
+        if (node.getElement().compareTo(key) < 0) {
+            succ = node;
+            return inorderSuccessor(node.getLeft(), succ, key);
+        } else if (node.getElement().compareTo(key) > 0) {
+            return inorderSuccessor(node.getRight(), succ, key);
+        } else {
+            if (node.getRight() != null) {
+                return findMinimum(node.getRight());
+            }
+        }
+        return succ;
     }
 
     private Node<E> inorderPredecessor(Node<E> node, Node<E> pred, E key) {
-        // TODO
-        return null;
+        if (node == null) {
+            return pred;
+        }
+
+        if (node.getElement().compareTo(key) < 0) {
+            return inorderPredecessor(node.getLeft(), pred, key);
+        } else if (node.getElement().compareTo(key) > 0) {
+            pred = node;
+            return inorderPredecessor(node.getRight(), pred, key);
+        } else {
+            if (node.getLeft() != null) {
+                return findMaximum(node.getLeft());
+            }
+        }
+        return pred;
     }
 
     public Position<E> inorderSuccessor(E key) {
@@ -265,17 +395,54 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @return iterable collection of the tree's positions in breadth-first order
      */
     public Iterable<Position<E>> breadthfirst() {
-        // TODO
-        return null;
+        List<Position<E>> snapshot = new ArrayList<>();
+
+        if (!isEmpty()) {
+            Queue<Position<E>> fringe = new LinkedQueue<>();
+            fringe.enqueue(root());
+
+            while (!fringe.isEmpty()) {
+                Position<E> p = fringe.dequeue();
+                snapshot.add(p);
+
+                for (Position<E> c : children(p)) {
+                    fringe.enqueue(c);
+                }
+            }
+        }
+        return snapshot;
     }
 
     public void construct(E[] inorder, E[] preorder) {
-        // TODO
+        this.root = construct_tree(inorder, preorder, 0, preorder.length, 0, inorder.length);
     }
 
     private Node<E> construct_tree(E[] inorder, E[] preorder, int pStart, int pEnd, int iStart, int iEnd) {
-        // TODO
-        return null;
+        if (pStart >= pEnd || iStart >= iEnd) {
+            return null;
+        }
+
+        E element = preorder[pStart];
+        Node<E> n = createNode(element, null, null, null);
+        size++;
+
+
+        int i;
+        for (i = iStart; i < iEnd; i++) {
+            if (inorder[i] == element) {
+                break;
+            }
+        }
+
+        int leftSubtreeSize =  i - iStart;
+
+        n.setLeft(construct_tree(inorder, preorder, pStart + 1, pStart + 1 + leftSubtreeSize, iStart, i));
+        n.setRight(construct_tree(inorder, preorder, pStart + 1 + leftSubtreeSize, pEnd, i + 1, iEnd));
+
+        if (n.getLeft() != null) n.getLeft().setParent(n);
+        if (n.getRight() != null) n.getRight().setParent(n);
+
+        return n;
     }
 
 
@@ -365,16 +532,25 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @throws IllegalStateException if the tree is not empty
      */
     public Position<E> addRoot(E e) throws IllegalStateException {
-        // TODO
-        return null;
+        if (!isEmpty()) {
+            throw new IllegalStateException("tree is not empty");
+        }
+        root = createNode(e, null,null,null);
+        size = 1;
+        return root;
     }
 
     /*
      * Create a detached node!
      */
     public Position<E> add(E e, Position<E> parent, Position<E> left, Position<E> right) {
-        // TODO
-        return null;
+        Node<E> p = validate(parent);
+        Node<E> l = validate(left);
+        Node<E> r = validate(right);
+
+        Node<E> node = createNode(e, p, l, r);
+        size++;
+        return node;
     }
 
     /**
@@ -388,8 +564,20 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @throws IllegalArgumentException if p already has a left child
      */
     public Position<E> addLeft(Position<E> p, E e) throws IllegalArgumentException {
-        // TODO
-        return null;
+        Node<E> parent = validate(p);
+
+        if (parent == null) {
+            throw new IllegalArgumentException("not valid position");
+        }
+
+        if (parent.getLeft() != null) {
+            throw new IllegalArgumentException("already has left child");
+        }
+
+        Node<E> child = createNode(e, parent, null, null);
+        parent.setLeft(child);
+        size++;
+        return child;
     }
 
     /**
@@ -403,8 +591,20 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @throws IllegalArgumentException if p already has a right child
      */
     public Position<E> addRight(Position<E> p, E e) throws IllegalArgumentException {
-        // TODO
-        return null;
+        Node<E> parent = validate(p);
+
+        if (parent == null) {
+            throw new IllegalArgumentException("not valid position");
+        }
+
+        if (parent.getRight() != null) {
+            throw new IllegalArgumentException("already has right child");
+        }
+
+        Node<E> child = createNode(e, parent, null, null);
+        parent.setRight(child);
+        size++;
+        return child;
     }
 
     /**
@@ -417,12 +617,19 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @throws IllegalArgumentException if p is not a valid Position for this tree.
      */
     public E set(Position<E> p, E e) throws IllegalArgumentException {
-        // TODO
-        return null;
+        Node<E> pos = validate(p);
+        E element = pos.getElement();
+        pos.setElement(e);
+        return element;
     }
 
     public void setRoot(Position<E> e) throws IllegalArgumentException {
-        // TODO
+        if (this.root != null) {
+            throw new IllegalArgumentException("root already exists");
+        }
+        root = validate(e);
+
+
     }
 
     /**
@@ -434,8 +641,33 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
      * @throws IllegalArgumentException if p has two children.
      */
     public E remove(Position<E> p) throws IllegalArgumentException {
-        // TODO
-        return null;
+        Node<E> n = validate(p);
+
+        if (n == null) {
+            throw new IllegalArgumentException("not a valid position");
+        }
+
+        /*if (numChildren(p) == 2) {
+            throw new IllegalArgumentException("has 2 child already");
+        }*/
+
+        Node<E> child = n.getLeft() != null ? n.getLeft() : n.getRight();
+
+        if (child != null) {
+            child.setParent(n.getParent());
+        }
+        if (n == root) {
+            root = child;
+        } else {
+            Node<E> parent = n.getParent();
+            if (n == parent.getLeft()) {
+                parent.setLeft(child);
+            } else {
+                parent.setRight(child);
+            }
+        }
+        size--;
+        return n.getElement();
     }
 
     public String toString() {
@@ -447,7 +679,16 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
     }
 
     private Node<E> createLevelOrderHelper(java.util.ArrayList<E> l, Node<E> p, int i) {
-        // TODO
+        if (i < l.size()) {
+            Node<E> n = null;
+            if (l.get(i) != null) {
+                n = createNode(l.get(i), p, null, null);
+                n.left = createLevelOrderHelper(l, n, 2 * i + 1);
+                n.right = createLevelOrderHelper(l, n, 2 * i + 2);
+                ++size;
+            }
+            return n;
+        }
         return null;
     }
 
@@ -456,7 +697,13 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
     }
 
     private Node<E> createLevelOrderHelper(E[] arr, Node<E> parent, int i) {
-        // TODO
+        if (i < arr.length && arr[i] != null) {
+            Node<E> n = createNode(arr[i], parent, null, null);
+            n.left = createLevelOrderHelper(arr, n, 2 * i + 1);
+            n.right = createLevelOrderHelper(arr, n, 2 * i + 2);
+            ++size;
+            return n;
+        }
         return null;
     }
 
@@ -544,4 +791,17 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
         }
     }
 
+    private void printLeafNodes(Node<E> node) {
+        if (node == null) {
+            return;
+        }
+
+        // If it's a leaf node (no left or right child)
+        if (node.getLeft() == null && node.getRight() == null) {
+            System.out.print(node.element + " ");
+        } else {
+            printLeafNodes(node.getLeft());
+            printLeafNodes(node.getRight());
+        }
+    }
 }

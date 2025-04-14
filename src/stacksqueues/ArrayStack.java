@@ -33,7 +33,7 @@ public class ArrayStack<E> implements Stack<E> {
      */
     @SuppressWarnings({"unchecked"})
     public ArrayStack(int capacity) {        // constructs stack with given capacity
-        // TODO
+        data = (E[]) new Object[capacity];
     }
 
     /**
@@ -43,8 +43,7 @@ public class ArrayStack<E> implements Stack<E> {
      */
     @Override
     public int size() {
-        // TODO
-        return 0;
+        return  t + 1;
     }
 
     /**
@@ -65,7 +64,10 @@ public class ArrayStack<E> implements Stack<E> {
      */
     @Override
     public void push(E e) {
-        // TODO
+        if (size() == data.length) {
+            throw new IllegalStateException("Stack is full can't push");
+        }
+        data[++t] = e;
     }
 
     /**
@@ -75,8 +77,8 @@ public class ArrayStack<E> implements Stack<E> {
      */
     @Override
     public E top() {
-        // TODO
-        return null;
+
+        return isEmpty() ? null : data[t];
     }
 
     /**
@@ -86,8 +88,14 @@ public class ArrayStack<E> implements Stack<E> {
      */
     @Override
     public E pop() {
-        // TODO
-        return null;
+        if (isEmpty()) {
+            return null;
+        }
+
+        E element = data[t];
+        data[t] = null;
+        t--;
+        return element;
     }
 
     /**
@@ -97,8 +105,16 @@ public class ArrayStack<E> implements Stack<E> {
      * @return textual representation of the stack
      */
     public String toString() {
-        // TODO
-        return null;
+        StringBuilder sb = new StringBuilder("[");
+
+        for (int j = t; j >= 0; j--) {
+            sb.append(data[j]);
+            if (j != 0) {
+                sb.append(", ");
+            }
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
     /**

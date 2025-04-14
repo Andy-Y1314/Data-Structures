@@ -10,7 +10,7 @@ public class ArrayQueue<E> implements Queue<E> {
 	private int size = 0;
 
 	public ArrayQueue(int capacity) {
-		// TODO
+		data = (E[]) new Object[capacity];
 	}
 
 	public ArrayQueue() {
@@ -30,25 +30,46 @@ public class ArrayQueue<E> implements Queue<E> {
 
 	@Override
 	public void enqueue(E e) {
-		// TODO
+		if (size == data.length) {
+			return;
+		}
 
+		int pos = (front + size) % CAPACITY;
+		data[pos] = e;
+		size++;
 	}
 
 	@Override
 	public E first() {
-		// TODO
-		return null;
+		if (isEmpty()) {
+			return null;
+		}
+		return data[front];
 	}
 
 	@Override
 	public E dequeue() {
-		// TODO
-		return null;
+		if (isEmpty()) {
+			return null;
+		}
+		E element = data[front];
+		data[front] = null;
+		front = (front + 1) % CAPACITY;
+		size--;
+		return element;
 	}
 
 	public String toString() {
-		// TODO
-		return null;
+		StringBuilder sb = new StringBuilder("[");
+
+		for (int i = 0; i < size; i++) {
+			sb.append(data[i]);
+			if (i != size - 1) {
+				sb.append(", ");
+			}
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 
 	public static void main(String[] args) {

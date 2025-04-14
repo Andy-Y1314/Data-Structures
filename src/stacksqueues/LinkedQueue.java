@@ -11,40 +11,35 @@ public class LinkedQueue<E> implements Queue<E> {
 	}
 
 	public LinkedQueue() {
-		// TODO
+		ll = new DoublyLinkedList<>();
 	}
 
 	@Override
 	public int size() {
-		// TODO
-		return 0;
+		return ll.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO
-		return false;
+		return ll.isEmpty();
 	}
 
 	@Override
 	public void enqueue(E e) {
-		// TODO
+		ll.addLast(e);
 	}
 
 	@Override
 	public E first() {
-		// TODO
-		return null;
+		return ll.first();
 	}
 
 	@Override
 	public E dequeue() {
-		// TODO
-		return null;
+		return ll.removeFirst();
 	}
 
 	public String toString() {
-		// TODO
-		return null;
+		return ll.toString();
 	}
 }

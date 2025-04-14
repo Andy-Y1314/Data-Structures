@@ -8,12 +8,26 @@ public class SinglyLinkedList<E> implements List<E> {
 
     private static class Node<E> {
         // TODO
+        private E element;
+        private Node<E> next;
 
         public Node(E e, Node<E> n) {
-            // TODO
+            element = e;
+            next = n;
         }
 
         // Accessor methods
+        public E getElement() {
+            return element;
+        }
+
+        public Node<E> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<E> node) {
+            next = node;
+        }
 
     } //----------- end of nested Node class -----------
 
@@ -46,42 +60,114 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E get(int position) {
-        // TODO
-        return null;
+        Node<E> curr = head;
+        if (position == 0) {
+            return head.getElement();
+        }
+
+        for (int i = 0; i < position; i++) {
+            curr = curr.getNext();
+        }
+        return curr.getElement();
     }
 
     @Override
     public void add(int position, E e) {
-        // TODO
+        Node<E> curr = head;
+
+        if (position == 0) {
+            addFirst(e);
+        }
+
+        if (position > size) {
+            return;
+        }
+
+        for (int i = 0; i < position - 1; i++) {
+            curr = curr.getNext();
+        }
+        Node<E> newNode = new Node<E>(e, curr.getNext());
+        curr.setNext(newNode);
+        size++;
     }
 
 
     @Override
     public void addFirst(E e) {
-        // TODO
+        Node<E> newNode = new Node<>(e, head);
+        head = newNode;
+        size++;
     }
 
     @Override
     public void addLast(E e) {
-        // TODO
+        Node<E> newNode = new Node<>(e, null);
+        if (isEmpty()) {
+            head = newNode;
+        } else {
+            Node<E> curr = head;
+            while (curr.getNext() != null) {
+                curr = curr.getNext();
+            }
+            curr.setNext(newNode);
+        }
+        size++;
     }
 
     @Override
     public E remove(int position) {
-        // TODO
-        return null;
+        if (position == 0) {
+            return removeFirst();
+        }
+        if (position >= size) {
+            return null;
+        }
+
+        Node<E> curr = head;
+
+        for (int i = 0; i < position - 1; i++) {
+            curr = curr.getNext();
+        }
+        Node<E> nextNode = curr.getNext();
+        curr.setNext(nextNode.getNext());
+        nextNode.setNext(null);
+        size--;
+        return nextNode.getElement();
     }
 
     @Override
     public E removeFirst() {
-        // TODO
-        return null;
+        if (isEmpty()) {
+            return null;
+        }
+        E element = head.getElement();
+        head = head.getNext();
+        size--;
+        return element;
     }
 
     @Override
     public E removeLast() {
-        // TODO
-        return null;
+        if (isEmpty())
+            return null;
+
+        if (size == 1) {
+            E element = head.getElement();
+            head = null;
+            size--;
+            return element;
+        }
+
+        Node<E> prev = head;
+        Node<E> curr = head.getNext();
+        while (curr.getNext() != null) {
+            curr = curr.getNext();
+            prev = curr;
+        }
+
+        prev.setNext(null);
+        size--;
+        return curr.getElement();
     }
 
     //@Override
@@ -90,23 +176,66 @@ public class SinglyLinkedList<E> implements List<E> {
     }
 
     private class SinglyLinkedListIterator<E> implements Iterator<E> {
+        Node<E> curr = (Node<E>) head;
+
         @Override
         public boolean hasNext() {
-            // TODO
-            return false;
+            return curr != null;
         }
 
         @Override
         public E next() {
-            // TODO
-            return null;
+            E element = curr.getElement();
+            curr = curr.getNext();
+            return element;
         }
-        // TODO
     }
 
     public String toString() {
-        // TODO
-        return null;
+        StringBuilder sb = new StringBuilder("[");
+        Node<E> curr = head;
+        while (curr != null) {
+            sb.append(curr.getElement());
+            curr = curr.getNext();
+            if (curr != null) {
+                sb.append(", ");
+            }
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    //Week 6 lab
+    public void reverse() {
+        Node<E> curr = head;
+        Node<E> prev = null;
+        Node<E> next;
+
+        while (curr != null) {
+            next = curr.getNext();
+            curr.setNext(prev);
+            prev = curr;
+            curr = next;
+        }
+        head = prev;
+    }
+
+    //Week 6 lab
+    public SinglyLinkedList<E> recursiveCopy() {
+        SinglyLinkedList<E> list = new SinglyLinkedList<>();
+        list.head = copy(head);
+        return list;
+    }
+
+    //Week 6 lab
+    private Node<E> copy(Node<E> current) {
+        if (current == null) {
+            return null;
+        }
+        Node<E> newNode = new Node<>(current.getElement(),null);
+        newNode.next = copy(current.getNext());
+
+        return newNode;
     }
 
     public static void main(String[] args) {

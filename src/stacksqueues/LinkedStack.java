@@ -10,40 +10,35 @@ public class LinkedStack<E> implements Stack<E> {
 	}
 
 	public LinkedStack() {
-		// TODO
+		ll = new DoublyLinkedList<>();
 	}
 
 	@Override
 	public int size() {
-		// TODO
-		return 0;
+		return ll.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO
-		return false;
+		return ll.isEmpty();
 	}
 
 	@Override
 	public void push(E e) {
-		// TODO
+		ll.addFirst(e);
 	}
 
 	@Override
 	public E top() {
-		// TODO
-		return null;
+		return ll.first();
 	}
 
 	@Override
 	public E pop() {
-		// TODO
-		return null;
+		return ll.removeFirst();
 	}
 
 	public String toString() {
-		// TODO
-		return null;
+		return ll.toString();
 	}
 }

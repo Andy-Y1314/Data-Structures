@@ -17,52 +17,45 @@ public class LinkedDeque<E> implements Deque<E> {
 
 	@Override
 	public int size() {
-		// TODO
-		return 0;
+		return ll.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO
-		return false;
+		return ll.isEmpty();
 	}
 
 	@Override
 	public E first() {
-		// TODO
-		return null;
+		return ll.first();
 	}
 
 	@Override
 	public E last() {
-		// TODO
-		return null;
+		return ll.last();
 	}
 
 	@Override
 	public void addFirst(E e) {
-		// TODO
+		ll.addFirst(e);
 	}
 
 	@Override
 	public void addLast(E e) {
-		// TODO
+		ll.addLast(e);
 	}
 
 	@Override
 	public E removeFirst() {
-		// TODO
-		return null;
+		return ll.removeFirst();
 	}
 
 	@Override
 	public E removeLast() {
-		// TODO
-		return null;
+		return ll.removeLast();
 	}
 
 	public String toString() {
-		// TODO
-		return null;
+		return ll.toString();
 	}
 }
