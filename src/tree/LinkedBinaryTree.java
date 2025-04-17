@@ -347,17 +347,18 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
     // Recursive function to find an inorder successor
     private Node<E> inorderSuccessor(Node<E> node, Node<E> succ, E key) {
         if (node == null) {
-            return null;
+            return succ;
         }
-        if (node.getElement().compareTo(key) < 0) {
-            succ = node;
-            return inorderSuccessor(node.getLeft(), succ, key);
-        } else if (node.getElement().compareTo(key) > 0) {
-            return inorderSuccessor(node.getRight(), succ, key);
-        } else {
-            if (node.getRight() != null) {
-                return findMinimum(node.getRight());
+
+        if (node.element.compareTo(key) == 0) {
+            if (node.right != null) {
+                return findMinimum(node.right);
             }
+        } else if (key.compareTo(node.element) < 0) {
+            succ = node;
+            return inorderSuccessor(node.left, succ, key);
+        } else {
+            return inorderSuccessor(node.right, succ, key);
         }
         return succ;
     }
@@ -367,15 +368,15 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
             return pred;
         }
 
-        if (node.getElement().compareTo(key) < 0) {
-            return inorderPredecessor(node.getLeft(), pred, key);
-        } else if (node.getElement().compareTo(key) > 0) {
-            pred = node;
-            return inorderPredecessor(node.getRight(), pred, key);
-        } else {
-            if (node.getLeft() != null) {
-                return findMaximum(node.getLeft());
+        if (node.element.compareTo(key) == 0) {
+            if (node.left != null) {
+                return findMaximum(node.left);
             }
+        } else if (key.compareTo(node.element) < 0) {
+            return inorderPredecessor(node.left, pred, key);
+        } else {
+            pred = node;
+            return inorderPredecessor(node.right, pred, key);
         }
         return pred;
     }
@@ -647,9 +648,9 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
             throw new IllegalArgumentException("not a valid position");
         }
 
-        /*if (numChildren(p) == 2) {
+        if (numChildren(p) == 2) {
             throw new IllegalArgumentException("has 2 child already");
-        }*/
+        }
 
         Node<E> child = n.getLeft() != null ? n.getLeft() : n.getRight();
 
@@ -667,7 +668,11 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
             }
         }
         size--;
-        return n.getElement();
+        E temp = n.getElement();
+        n.setElement(null);
+        n.setLeft(null);
+        n.setRight(n);
+        return temp;
     }
 
     public String toString() {

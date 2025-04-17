@@ -31,12 +31,12 @@ public class AVLTreeMap<K extends Comparable<K>, V> extends TreeMap<K, V> {
 
 	public static void main(String [] args) throws IOException {
 		AVLTreeMap<Integer, String> map = new AVLTreeMap<>();
-		Integer[] arr = new Integer[]{35, 26, 15};//, 24, 33, 4, 12, 1, 23, 21, 2, 5};
+		Integer[] arr = new Integer[]{35, 26, 15, 24, 33, 4, 12, 1, 23, 21, 2, 5};
 
 		for (Integer i : arr) {
 			map.put(i, Integer.toString(i));
 		}
-		map.remove(26);
+		map.remove(15);
 		System.out.println(map.toBinaryTreeString());
 	}
 
@@ -49,19 +49,17 @@ public class AVLTreeMap<K extends Comparable<K>, V> extends TreeMap<K, V> {
 	 * Recomputes the height of the given position based on its children's heights.
 	 */
 	protected void recomputeHeight(Position<Entry<K, V>> p) {
-		// TODO
+
 		tree.setAux(p, 1 + Math.max(height(tree.left(p)), height(tree.right(p))));
 	}
 
 	/** Returns whether a position has balance factor between -1 and 1 inclusive. */
 	protected boolean isBalanced(Position<Entry<K, V>> p) {
-		// TODO
 		return Math.abs(height(tree.left(p)) - height(tree.right(p))) <= 1;
 	}
 
 	/** Returns a child of p with height no smaller than that of the other child. */
 	protected Position<Entry<K, V>> tallerChild(Position<Entry<K, V>> p) {
-		// TODO
 		if (height(tree.left(p)) > height(tree.right(p))) return tree.left(p);
 		if (height(tree.left(p)) < height(tree.right(p))) return tree.right(p);
 
@@ -82,7 +80,6 @@ public class AVLTreeMap<K extends Comparable<K>, V> extends TreeMap<K, V> {
 	 * imbalance is found, continuing until balance is restored.
 	 */
 	protected void rebalance(Position<Entry<K, V>> p) throws IOException {
-		// TODO
 		int oldHeight, newHeight;
 		do {
 			oldHeight = height(p);
@@ -100,15 +97,13 @@ public class AVLTreeMap<K extends Comparable<K>, V> extends TreeMap<K, V> {
 	/** Overrides the TreeMap rebalancing hook that is called after an insertion. */
 	@Override
 	protected void rebalanceInsert(Position<Entry<K, V>> p) throws IOException {
-		// TODO
 		rebalance(p);
 	}
 
 	/** Overrides the TreeMap rebalancing hook that is called after a deletion. */
 	@Override
 	protected void rebalanceDelete(Position<Entry<K, V>> p) throws IOException {
-		// TODO
-		if (!tree.isRoot(p)) {
+		if (p != null && !tree.isRoot(p)) {
 			rebalance(tree.parent(p));
 		}
 	}

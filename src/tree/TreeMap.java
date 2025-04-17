@@ -120,7 +120,7 @@ public class TreeMap<K extends Comparable<K>, V> extends AbstractSortedMap<K, V>
 		Position<Entry<K, V>> pos = p;
 
 		while (tree.isInternal(pos)) {
-			pos = tree.left(p);
+			pos = tree.left(pos);
 		}
 		return tree.parent(pos);
 	}
@@ -132,13 +132,13 @@ public class TreeMap<K extends Comparable<K>, V> extends AbstractSortedMap<K, V>
 	 * @return Position with maximum key in subtree
 	 */
 	protected Position<Entry<K, V>> treeMax(Position<Entry<K, V>> p) {
-		Position<Entry<K, V>> pos = p;
+		Position<Entry<K, V>> walk = p;
 
-		while (tree.isInternal(pos)) {
-			pos = tree.right(p);
+		while (tree.isInternal(walk)) {
+			walk = tree.right(walk);
 		}
 
-		return tree.parent(pos);
+		return tree.parent(walk);
 	}
 
 	/**
@@ -201,21 +201,23 @@ public class TreeMap<K extends Comparable<K>, V> extends AbstractSortedMap<K, V>
 		if (tree.isExternal(p)) {
 			rebalanceAccess(p);
 			return null;
-		}
-		V old = p.getElement().getValue();
+		} else {
 
-		if (tree.isExternal(tree.left(p)) && tree.isInternal(tree.right(p))) {
-			Position<Entry<K, V>> replacement = treeMax(tree.left(p));
-			tree.set(p, replacement.getElement());
-			p = replacement;
-		}
+			V old = p.getElement().getValue();
 
-		Position<Entry<K, V>> leaf = (tree.isExternal(tree.left(p)) ? tree.left(p) : tree.right(p));
-		Position<Entry<K, V>> sib = tree.sibling(leaf);
-		tree.remove(leaf);
-		tree.remove(p);
-        //rebalanceDelete(sib);
-		return old;
+			if (tree.isInternal(tree.left(p)) && tree.isInternal(tree.right(p))) {
+				Position<Entry<K, V>> replacement = treeMax(tree.left(p));
+				tree.set(p, replacement.getElement());
+				p = replacement;
+			}
+
+			Position<Entry<K, V>> leaf = (tree.isExternal(tree.left(p)) ? tree.left(p) : tree.right(p));
+			Position<Entry<K, V>> sib = tree.sibling(leaf);
+			tree.remove(leaf);
+			tree.remove(p);
+			rebalanceDelete(sib);
+			return old;
+		}
 	}
 
 	// additional behaviors of the SortedMap interface
