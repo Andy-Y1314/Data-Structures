@@ -103,7 +103,9 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
     public Position<E> sibling(Position<E> p) {
         Position<E> parent = parent(p);
 
-        if (parent == null) return null;
+        if (parent == null) {
+            return null;
+        }
 
         if (p == left(parent)) {
             return right(p);
@@ -629,8 +631,6 @@ public class LinkedBinaryTree<E extends Comparable<E>> implements BinaryTree<E> 
             throw new IllegalArgumentException("root already exists");
         }
         root = validate(e);
-
-
     }
 
     /**

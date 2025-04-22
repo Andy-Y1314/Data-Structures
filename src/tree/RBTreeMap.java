@@ -87,9 +87,9 @@ public class RBTreeMap<K extends Comparable<K>,V> extends TreeMap<K,V> {
     /** Overrides the TreeMap rebalancing hook that is called after a deletion. */
     @Override
     protected void rebalanceDelete(Position<Entry<K,V>> p) throws IOException {
-        if (isRed(p))                        // deleted parent was black
+        if (p != null && isRed(p))                        // deleted parent was black
             makeBlack(p);                      // so this restores black depth
-        else if (!tree.isRoot(p)) {
+        else if (p != null && !tree.isRoot(p)) {
             Position<Entry<K,V>> sib = tree.sibling(p);
             if (tree.isInternal(sib) && (isBlack(sib) || tree.isInternal(tree.left(sib))))
                 remedyDoubleBlack(p);            // sib's subtree has nonzero black height

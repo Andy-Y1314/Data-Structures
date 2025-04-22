@@ -34,22 +34,21 @@ public class Timer {
             worker.run(); // do work
             ++n_repeats;
             
-            if ( n_repeats > Timer.MIN_REPEATS && n_repeats % Timer.MIN_REPEATS == 0) { // has to run a minimum number of times
+            if (n_repeats > Timer.MIN_REPEATS && n_repeats % Timer.MIN_REPEATS == 0) {
                 var delta_t = (System.nanoTime() - start);
                 if (n_repeats >= Timer.MAX_REPEATS || delta_t > Timer.MIN_SECONDS ) {
-                    //System.out.println(n_repeats + ":" + ((1.0*delta_t)/1e9) + " [" + (n_repeats > Timer.MIN_REPEATS) + ", " + (n_repeats >= Timer.MAX_REPEATS) + ", " + (delta_t > Timer.MIN_SECONDS) + "]");
                     break;
                 }
             }
         }
         long elapsed = System.nanoTime() - start;
-
-        // System.out.println("# elapsed: " + elapsed + ", " + elapsed/1e9 + " -> " + "n_repeats:" + " " + n_repeats);
+        //System.out.println("# elapsed: " + elapsed + ", " + elapsed/1e9 + " -> " + "n_repeats:" + " " + n_repeats);
         return 1e-9 * elapsed / n_repeats;
     }
 
-    public static void main(String [] args) {
-        main_sort_ds(args);
+    public static void main(String[] args) {
+        //main_sort_ds(args);
+        main_bubble(args);
     }
 
     public static void main_bubble(String[] args) {
@@ -72,10 +71,10 @@ public class Timer {
 
             Runnable worker = () -> {
                 int [] c_arr = Arrays.copyOf(arr, arr.length);
-                //Arrays.sort(c_arr);
-                //Arrays.binarySearch(arr, 0, arr.length-1, rnd.nextInt(0, arr.length-1));
+                Arrays.sort(c_arr);
+                Arrays.binarySearch(arr, 0, arr.length-1, rnd.nextInt(0, arr.length-1));
                 //ob.mergeSort(arr, 0, arr.length - 1);
-                BubbleSort.sort(c_arr);
+                //BubbleSort.sort(c_arr);
             };
             double result = Timer.measure(worker);
 //            double result =

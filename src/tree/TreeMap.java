@@ -1,9 +1,7 @@
 package tree;
-
 import interfaces.Entry;
 import interfaces.Position;
 import utils.MapEntry;
-
 import java.io.IOException;
 //import java.util.*;
 import java.util.*;
@@ -17,7 +15,7 @@ import java.util.stream.Collectors;
 public class TreeMap<K extends Comparable<K>, V> extends AbstractSortedMap<K, V> {
 
 
-	protected BalanceableBinaryTree<K, V> tree = new BalanceableBinaryTree<>();
+	public BalanceableBinaryTree<K, V> tree = new BalanceableBinaryTree<>();
 
 	/** Constructs an empty map using the natural ordering of keys. */
 	public TreeMap() {
@@ -81,7 +79,7 @@ public class TreeMap<K extends Comparable<K>, V> extends AbstractSortedMap<K, V>
 	}
 
 	/** Utility used when inserting a new entry at a leaf of the tree */
-	private void expandExternal(Position<Entry<K, V>> p, Entry<K, V> entry) {
+	protected void expandExternal(Position<Entry<K, V>> p, Entry<K, V> entry) {
 		tree.set(p, entry);
 		tree.addLeft(p, null);
 		tree.addRight(p, null);
@@ -95,7 +93,7 @@ public class TreeMap<K extends Comparable<K>, V> extends AbstractSortedMap<K, V>
 	 * @param p   a position of the tree serving as root of a subtree
 	 * @return Position holding key, or last node reached during search
 	 */
-	private Position<Entry<K, V>> treeSearch(Position<Entry<K, V>> p, K key) {
+	protected Position<Entry<K, V>> treeSearch(Position<Entry<K, V>> p, K key) {
 		if (tree.isExternal(p)) {
 			return p;
 		}
@@ -106,7 +104,7 @@ public class TreeMap<K extends Comparable<K>, V> extends AbstractSortedMap<K, V>
 		} else if (comparison < 0) {
 			return treeSearch(tree.left(p), key);
 		} else {
-			return  treeSearch(tree.right(p), key);
+			return treeSearch(tree.right(p), key);
 		}
 	}
 
@@ -444,6 +442,12 @@ public class TreeMap<K extends Comparable<K>, V> extends AbstractSortedMap<K, V>
 	}
 
 	public static void main(String[] args) throws IOException {
+		TreeMap<Integer, String> map = new TreeMap<>();
+		Integer[] arr = new Integer[] {35, 25};
+
+		for (Integer i : arr) {
+			map.put(i, Integer.toString(i));
+		}
 	}
 
 

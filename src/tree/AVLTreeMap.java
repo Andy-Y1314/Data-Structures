@@ -31,12 +31,12 @@ public class AVLTreeMap<K extends Comparable<K>, V> extends TreeMap<K, V> {
 
 	public static void main(String [] args) throws IOException {
 		AVLTreeMap<Integer, String> map = new AVLTreeMap<>();
-		Integer[] arr = new Integer[]{35, 26, 15, 24, 33, 4, 12, 1, 23, 21, 2, 5};
+		Integer[] arr = new Integer[]{35, 26, 15, 24, 33, 4};// 12, 1, 23, 21, 2, 5};
 
 		for (Integer i : arr) {
 			map.put(i, Integer.toString(i));
 		}
-		map.remove(15);
+		map.remove(26);
 		System.out.println(map.toBinaryTreeString());
 	}
 
@@ -49,7 +49,6 @@ public class AVLTreeMap<K extends Comparable<K>, V> extends TreeMap<K, V> {
 	 * Recomputes the height of the given position based on its children's heights.
 	 */
 	protected void recomputeHeight(Position<Entry<K, V>> p) {
-
 		tree.setAux(p, 1 + Math.max(height(tree.left(p)), height(tree.right(p))));
 	}
 
