@@ -22,7 +22,7 @@ public class Benchmark {
 
             //benchmarkTreapInorder(randomData, sortedData, reverseSortedData, partiallySortedData);
             //benchmarkAVLInorder(randomData, sortedData, reverseSortedData, partiallySortedData);
-            //benchmarkTreeMapInorder(randomData, sortedData, reverseSortedData, partiallySortedData);
+            benchmarkTreeMapInorder(randomData, sortedData, reverseSortedData, partiallySortedData);
 
             /*benchmarkTreapSearch(randomData, sortedData, reverseSortedData, partiallySortedData);
             benchmarkAVLTreeMapSearch(randomData, sortedData, reverseSortedData, partiallySortedData);
@@ -35,7 +35,7 @@ public class Benchmark {
 
             //benchmarkTreapInsert(randomData, sortedData, reverseSortedData, partiallySortedData);
             //benchmarkAVLTreeMapInsert(randomData, sortedData, reverseSortedData, partiallySortedData);
-            benchmarkJavaTreeMapInsert(randomData, sortedData, reverseSortedData, partiallySortedData);
+            //benchmarkJavaTreeMapInsert(randomData, sortedData, reverseSortedData, partiallySortedData);
 
             /*benchmarkTreapInsertSingle(randomData, sortedData, reverseSortedData, partiallySortedData);
             benchmarkAVLInsertSingle(randomData, sortedData, reverseSortedData, partiallySortedData);
@@ -442,14 +442,14 @@ public class Benchmark {
         System.out.println();
         System.out.println("************Benchmarking Treap insert**************");
 
-        System.out.println("Treap (Random): " + runTreapBenchmark(randomData) + " ns");
-        System.out.println("Treap (Sorted): " + runTreapBenchmark(sortedData) + " ns");
-        System.out.println("Treap (Reverse Sorted): " + runTreapBenchmark(reverseSortedData) + " ns");
-        System.out.println("Treap (Partially Sorted): " + runTreapBenchmark(partiallySortedData) + " ns");
+        System.out.println("Treap (Random): " + runTreapInsertBenchmark(randomData) + " ns");
+        System.out.println("Treap (Sorted): " + runTreapInsertBenchmark(sortedData) + " ns");
+        System.out.println("Treap (Reverse Sorted): " + runTreapInsertBenchmark(reverseSortedData) + " ns");
+        System.out.println("Treap (Partially Sorted): " + runTreapInsertBenchmark(partiallySortedData) + " ns");
         System.out.println();
     }
 
-    private static long runTreapBenchmark(Integer[] data) throws IOException {
+    private static long runTreapInsertBenchmark(Integer[] data) throws IOException {
         for (int i = 0; i < WARMUP_TIMES; i++) {
             Treap<Integer, String> treap = new Treap<>();
             for (Integer key : data) {
@@ -474,14 +474,14 @@ public class Benchmark {
         System.out.println();
         System.out.println("*********Benchmarking AVLTreeMap insert*****");
 
-        System.out.println("AVLTreeMap (Random): " + runAVLBenchmark(randomData) + " ns");
-        System.out.println("AVLTreeMap (Sorted): " + runAVLBenchmark(sortedData) + " ns");
-        System.out.println("AVLTreeMap (Reverse Sorted): " + runAVLBenchmark(reverseSortedData) + " ns");
-        System.out.println("AVLTreeMap (Partially Sorted): " + runAVLBenchmark(partiallySortedData) + " ns");
+        System.out.println("AVLTreeMap (Random): " + runAVLInsertBenchmark(randomData) + " ns");
+        System.out.println("AVLTreeMap (Sorted): " + runAVLInsertBenchmark(sortedData) + " ns");
+        System.out.println("AVLTreeMap (Reverse Sorted): " + runAVLInsertBenchmark(reverseSortedData) + " ns");
+        System.out.println("AVLTreeMap (Partially Sorted): " + runAVLInsertBenchmark(partiallySortedData) + " ns");
         System.out.println();
     }
 
-    private static long runAVLBenchmark(Integer[] data) throws IOException {
+    private static long runAVLInsertBenchmark(Integer[] data) throws IOException {
         for (int i = 0; i < WARMUP_TIMES; i++) {
             AVLTreeMap<Integer, String> avlTreeMap = new AVLTreeMap<>();
             for (Integer key : data) {
@@ -506,21 +506,20 @@ public class Benchmark {
         System.out.println();
         System.out.println("********Benchmarking java.util.TreeMap insert************");
 
-        System.out.println("TreeMap (Random): " + runTreeMapBenchmark(randomData) + " ns");
-        System.out.println("TreeMap (Sorted): " + runTreeMapBenchmark(sortedData) + " ns");
-        System.out.println("TreeMap (Reverse Sorted): " + runTreeMapBenchmark(reverseSortedData) + " ns");
-        System.out.println("TreeMap (Partially Sorted): " + runTreeMapBenchmark(partiallySortedData) + " ns");
+        System.out.println("TreeMap (Random): " + runTreeMapInsertBenchmark(randomData) + " ns");
+        System.out.println("TreeMap (Sorted): " + runTreeMapInsertBenchmark(sortedData) + " ns");
+        System.out.println("TreeMap (Reverse Sorted): " + runTreeMapInsertBenchmark(reverseSortedData) + " ns");
+        System.out.println("TreeMap (Partially Sorted): " + runTreeMapInsertBenchmark(partiallySortedData) + " ns");
         System.out.println();
     }
 
-    private static long runTreeMapBenchmark(Integer[] data) {
+    private static long runTreeMapInsertBenchmark(Integer[] data) {
         for (int i = 0; i < WARMUP_TIMES; i++) {
             TreeMap<Integer, String> treeMap = new TreeMap<>();
             for (Integer key : data) {
                 treeMap.put(key, Integer.toString(key));
             }
         }
-
         long totalTime = 0;
         for (int i = 0; i < NUM_TIMES; i++) {
             TreeMap<Integer, String> treeMap = new TreeMap<>();

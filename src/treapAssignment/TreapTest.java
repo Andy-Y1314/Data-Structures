@@ -3,15 +3,12 @@ package treapAssignment;
 import interfaces.Entry;
 import org.junit.jupiter.api.Test;
 import tree.AVLTreeMap;
-import tree.SplayTreeMap;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 class TreapTest  {
 
@@ -208,6 +205,7 @@ class TreapTest  {
             map.put(i, Integer.toString(i));
         }
 
+
         assertEquals(28, map.lowerEntry(30).getKey());
         assertEquals(32, map.lowerEntry(35).getKey());
     }
@@ -235,7 +233,6 @@ class TreapTest  {
         for (var e : map.entrySet()) {
             esStr.add(e);
         }
-
         assertEquals("[3, 4, 6, 7, 18, 22, 30, 33, 35, 37, 45, 50]", esStr.toString());
     }
 
